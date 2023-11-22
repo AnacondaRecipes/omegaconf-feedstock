@@ -11,6 +11,8 @@ source:
 
 build:
   number: 0
+  # skip s390x because openjdk is not available
+  skip: true  # [s390x]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
@@ -45,6 +47,8 @@ test:
     - pytest-mock
     - pytest-lazy-fixture
     - pip
+    # There is an `import attr` in https://github.com/omry/omegaconf/blob/350bdb6/tests/__init__.py#L6 
+    # satisfied by `attrs`, added in a later commit in `main`: https://github.com/omry/omegaconf/commit/a0cc301
     - attrs
     # Temporary pin <https://github.com/conda-forge/omegaconf-feedstock/pull/40#issuecomment-1294669062>
   source_files:
