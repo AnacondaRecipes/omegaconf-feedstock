@@ -19,6 +19,8 @@ requirements:
   host:
     - python
     - pip
+    - setuptools
+    - wheel
     #
     # antlr is included as binary in build_helpers/bin/antlr-4.9.3-complete.jar
     # also for this reason and the next point, we need the java sdk
@@ -49,7 +51,6 @@ test:
     # There is an `import attr` in https://github.com/omry/omegaconf/blob/350bdb6/tests/__init__.py#L6 
     # satisfied by `attrs`, added in a later commit in `main`: https://github.com/omry/omegaconf/commit/a0cc301
     - attrs
-    # Temporary pin <https://github.com/conda-forge/omegaconf-feedstock/pull/40#issuecomment-1294669062>
   source_files:
     - tests
   commands:
