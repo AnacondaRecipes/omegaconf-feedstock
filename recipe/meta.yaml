@@ -6,24 +6,38 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/omegaconf-{{ version }}.tar.gz
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: d5d4b6d29955cc50ad50c46dc269bcd92c6e00f5f90d23ab5fee7bfca4ba4cc7
 
 build:
-  noarch: python
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv
+  # skip s390x because openjdk is not available
+  skip: true  # [s390x]
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
   host:
-    - python >=3.7
+    - python
     - pip
-    - antlr 4.9
+    - setuptools
+    - wheel
+    #
+    # antlr is included as binary in build_helpers/bin/antlr-4.9.3-complete.jar
+    # also for this reason and the next point, we need the java sdk
+    # https://github.com/omry/omegaconf/blob/fd73050/build_helpers/build_helpers.py#L33
+    # in future versions it will be included in the vendor folder, see open PR: https://github.com/omry/omegaconf/pull/1114
+    # 
+    # - antlr 4.9
+    #
+    # in setup.py there is an ANTLRCommand import
+    # https://github.com/omry/omegaconf/blob/350bdb632865c5dd2286f2f6521acefe4abd843d/setup.py#L16-L23
+    # which is a command run using java, therefore java jdk is needed
+    # https://github.com/omry/omegaconf/blob/fd73050/build_helpers/build_helpers.py#L30-L40
+    - openjdk
   run:
-    - python >=3.7
+    - python
     - pyyaml >=5.1.0
-    - antlr-python-runtime 4.9
-    - typing_extensions
+    - antlr4-python3-runtime 4.9
 
 test:
   imports:
@@ -34,7 +48,9 @@ test:
     - pytest-mock
     - pytest-lazy-fixture
     - pip
-    # Temporary pin <https://github.com/conda-forge/omegaconf-feedstock/pull/40#issuecomment-1294669062>
+    # There is an `import attr` in https://github.com/omry/omegaconf/blob/350bdb6/tests/__init__.py#L6 
+    # satisfied by `attrs`, added in a later commit in `main`: https://github.com/omry/omegaconf/commit/a0cc301
+    - attrs
   source_files:
     - tests
   commands:
@@ -47,7 +63,6 @@ about:
   license_family: BSD
   license_file: LICENSE
   summary: Flexible python configuration system
-
   description: |
     OmegaConf is a hierarchical configuration system, with support for merging
     configurations from multiple sources (YAML config files,
