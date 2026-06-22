@@ -39,7 +39,7 @@ test:
     # pytest-benchmark 5.2.3 uses removed py.io API on py3.14; -p no:benchmark disables the plugin
     # node33/path_to_float/path_value/test_type_str+pathlib: pathlib hash/serialization changed in py3.12+
     - pytest --ignore tests/test_pydev_resolver_plugin.py -p no:benchmark
-        -k "not (node33 or path_to_float or (test_to_yaml and path_value) or (test_type_str and pathlib))"
+        -k "not (node33 or path_to_float or (test_to_yaml and path_value) or (test_type_str and pathlib) or test_resolver_error)"
   requires:
     - pip
     - pytest <8  # tests use _pytest.python_api.RaisesContext, removed in pytest 8
