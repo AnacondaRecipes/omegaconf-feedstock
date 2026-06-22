@@ -32,10 +32,17 @@ requirements:
 test:
   imports:
     - omegaconf
+  source_files:
+    - tests
   commands:
     - pip check
+    - pytest --ignore tests/test_pydev_resolver_plugin.py
   requires:
     - pip
+    - pytest
+    - pytest-benchmark
+    - pytest-mock
+    - attrs
 
 about:
   home: https://github.com/omry/omegaconf
