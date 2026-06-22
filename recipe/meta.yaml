@@ -39,7 +39,7 @@ test:
     - pytest --ignore tests/test_pydev_resolver_plugin.py
   requires:
     - pip
-    - pytest
+    - pytest <8  # tests use _pytest.python_api.RaisesContext, removed in pytest 8
     - pytest-benchmark
     - pytest-mock
     - attrs
